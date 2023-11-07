@@ -1,5 +1,7 @@
 #include <DigitalKeyboard.hpp>
 #include <os.hpp>
+#include <Process.hpp>
+#include <Window.hpp>
 
 using namespace soup;
 
@@ -10,9 +12,15 @@ int main()
 	std::vector<Key> keys_to_press{};
 	keys_down.reserve(3);
 	keys_to_press.reserve(3);
+	auto warframe_proc = Process::get("Warframe.x64.exe");
 	while (true)
 	{
 		keyboard.update();
+
+		if (warframe_proc && warframe_proc->id != Window::getFocused().getOwnerPid())
+		{
+			continue;
+		}
 
 		keys_to_press.clear();
 		if (keyboard.keys[KEY_Z]) // C4
